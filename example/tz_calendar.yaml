@@ -1,0 +1,17 @@
+meta:
+  tz: America/Los_Angeles
+
+events:
+  - name: Event in the default timezone
+    begin: 2021-09-21 15:00
+    duration:
+      hours: 1
+    description: |
+      This event is in the default timezone of the file.
+
+  - name: Event in the default timezone
+    begin: 2021-09-21 15:00+03:00
+    duration:
+      hours: 1
+    description: |
+      This event has an explicit timezone.

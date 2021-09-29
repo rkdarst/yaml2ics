@@ -28,3 +28,26 @@ def test_calendar_event():
     assert cal_str.startswith('BEGIN:VCALENDAR')
     assert 'SUMMARY:Earth Day' in cal_str
     assert cal_str.endswith('END:VCALENDAR')
+
+
+def test_calendar_yaml_default_tz():
+    cal = files_to_calendar(
+        [io.StringIO(textwrap.dedent(
+            '''
+            meta:
+              tz: Europe/Helsinki
+            events:
+            - summary: Event of the Century
+              begin: 1970-01-01 00:00:00
+              duration:
+                minutes: 30
+              description: |
+                Meet the team on the northern side of the field.
+            '''
+        ))]
+    )
+
+    cal_str = cal.serialize()
+    print(cal_str)
+    assert cal_str.startswith('BEGIN:VCALENDAR')
+    assert 'Europe/Helsinki:19700101T000000' in cal_str
