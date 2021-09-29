@@ -84,13 +84,24 @@ def files_to_calendar(files: list) -> ics.Calendar:
     """'main' function: list of files to our result"""
     all_events = [ ]
     for f in files:
+        # Load raw data
         if hasattr(f, 'read'):
             calendar_yaml = yaml.load(f.read(), Loader=yaml.FullLoader)
         else:
             calendar_yaml = yaml.load(open(f, 'r'), Loader=yaml.FullLoader)
+        # Find any possible metadata
+        meta = None
+        tzname = None
+        if 'meta' in calendar_yaml:
+            tzname = calendar_yaml['meta'].get('tz')
+        # Convert events
         for event in calendar_yaml['events']:
             all_events.append(event_from_yaml(event))
     calendar = events_to_calendar(all_events)
+    if tzname:
+        import ics.timespan
+        calendar.normalize(dateutil.tz.gettz(tzname),
+                           ics.timespan.NormalizationAction.REPLACE)
     return calendar
 
 
